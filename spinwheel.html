@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinning Wheel</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #e6a9a9;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+   margin-right: 50px;
+    }
+     .wheel-container {
+      position: relative;
+      width: 400px; /* Adjust the width to make the container larger */
+      height: 400px; /* Adjust the height to make the container larger */
+      margin-right: 50px; /* Adjust the space between the wheel and Player 1 */
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      margin-right: 20px;
+      background: conic-gradient(
+        #ffffff 0deg 60deg,
+        #ff0000 60deg 120deg,
+        #ffff00 120deg 180deg,
+        #00ff00 180deg 240deg,
+        #0000ff 240deg 300deg,
+        #ff00ff 300deg 360deg
+      );
+      box-shadow:0px 0px 0px 3px rgb(32, 60, 70),
+      0px 0px 0px 8px rgb(197, 206, 209),
+      0px 0px 0px 11px rgb(41, 71, 82);
+      transform-origin: center;
+      transition: transform 4s ease-out;
+    }
+
+    #spin-btn-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    #spin-btn {
+      padding: 10px 20px; /* Increase padding for better visibility and clickability */
+      font-size: 20px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #3498db;
+      border: none;
+     border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    #spin-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%) rotate(180deg);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 12px;
+      border-color: transparent transparent transparent #fff; /* Adjust color as needed */
+    }
+  .score-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Align to the right */
+      margin-right: 100px; /* Adjust the space between the wheel and scores */
+    }
+
+    .player {
+      padding: 10px;
+      font-size: 16px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      border: 2px solid #333;
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 0px 0px 0px 3px rgb(32, 60, 70),
+                  0px 0px 0px 6px rgb(197, 206, 209),
+                  0px 0px 0px 9px rgb(41, 71, 82);
+      margin-bottom: 20px;
+      margin-right: 50px; /* Adjust the space between Player 1 and Player 2 */
+    }
+
+    #player2 {
+      margin-bottom: 20px; /* Reset margin-bottom for Player 2 */
+    }
+
+    #restart-btn {
+      margin-top: 300px;
+      margin-right: 20px;
+      padding: 5px 15px;
+      font-size: 16px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #e74c3c; /* Red color */
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+ <div> <h2>SPIN WHEEL</h2> </div> 
+  <div class="wheel-container">
+    <div class="wheel" id="wheel"></div>
+    <div id="spin-btn-container">
+      <button id="spin-btn">Spin</button>
+    </div>
+  </div>
+
+
+  <div class="player" id="player1">
+    <p>Player 1</p>
+    <p>Score: <span id="score1">0</span></p>
+  </div>
+  <div class="player" id="player2">
+    <p>Player 2</p>
+    <p>Score: <span id="score2">0</span></p>
+  </div>
+  <button id="restart-btn" onclick="restartGame()">Restart</button>
+
+<audio id="spinSound" src="revolver-spin-96947.mp3"></audio>
+ <audio id="winSound" src="mixkit-retro-game-notification-212.wav"></audio> 
+
+  <div class="result" id="results">
+    <p>  <span id="win"></span></p>
+  </div>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spin-btn");
+    const player1ScoreElement = document.getElementById("score1");
+    const player2ScoreElement = document.getElementById("score2");
+    const winnerElement = document.getElementById("win");
+    const restartBtn = document.getElementById("restart-btn");
+    let spinning = false;
+    const spinSound = document.getElementById("spinSound");
+    const winSound = document.getElementById("winSound");
+
+    function restartGame() {
+      player1ScoreElement.textContent = "0";
+      player2ScoreElement.textContent = "0";
+      winnerElement.textContent = "";
+      wheel.style.transform = "rotate(0deg)";
+    }
+
+    spinBtn.addEventListener("click", () => {
+      if (!spinning) {
+        spinning = true;
+        spinSound.play();
+        const randomDegree = Math.floor(Math.random() * 3600) + 1800; // Minimum 5 full spins
+        wheel.style.transition = "transform 3s ease-out";
+        wheel.style.transform = `rotate(${randomDegree}deg)`;
+        
+        setTimeout(() => {
+          spinning = false;
+          wheel.style.transition = "none";
+          const rotationRemainder = randomDegree % 360;
+          wheel.style.transform = `rotate(${rotationRemainder}deg)`;
+          updateScores(rotationRemainder);
+        }, 4000);
+      }
+    });
+
+    const updateScores = (angleValue) => {
+      const rotationValues = [
+        { minDegree: 0, maxDegree: 60, value: 3 },
+        { minDegree: 60, maxDegree: 120, value: 3 },
+        { minDegree: 120, maxDegree: 180, value: 3 },
+        { minDegree: 180, maxDegree: 240, value: 4 },
+        { minDegree: 240, maxDegree: 300, value: 4 },
+        { minDegree: 300, maxDegree: 360, value: 4 },
+      ];
+
+      for (let i of rotationValues) {
+        if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
+          if (i.value >= 1 && i.value <= 3) {
+            player1ScoreElement.textContent = parseInt(player1ScoreElement.textContent) + i.value;
+            if (parseInt(player1ScoreElement.textContent) >= 15) {
+              winnerElement.textContent = "Player 1 has the LUCK of winning today!!";
+               winSound.play();
+            }
+          } else {
+            player2ScoreElement.textContent = parseInt(player2ScoreElement.textContent) + i.value;
+            if (parseInt(player2ScoreElement.textContent) >= 15) {
+              winnerElement.textContent = "Player 2 has the LUCK of winning today!!";
+               winSound.play();
+            }
+          }
+          break;
+        }
+      }
+    };
+  </script>
+</body>
+</html>
