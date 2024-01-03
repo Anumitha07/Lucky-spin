@@ -1,0 +1,110 @@
+ body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #e6a9a9;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+   margin-right: 50px;
+    }
+     .wheel-container {
+      position: relative;
+      width: 400px; /* Adjust the width to make the container larger */
+      height: 400px; /* Adjust the height to make the container larger */
+      margin-right: 50px; /* Adjust the space between the wheel and Player 1 */
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      margin-right: 20px;
+      background: conic-gradient(
+        #ffffff 0deg 60deg,
+        #ff0000 60deg 120deg,
+        #ffff00 120deg 180deg,
+        #00ff00 180deg 240deg,
+        #0000ff 240deg 300deg,
+        #ff00ff 300deg 360deg
+      );
+      box-shadow:0px 0px 0px 3px rgb(32, 60, 70),
+      0px 0px 0px 8px rgb(197, 206, 209),
+      0px 0px 0px 11px rgb(41, 71, 82);
+      transform-origin: center;
+      transition: transform 4s ease-out;
+    }
+
+    #spin-btn-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    #spin-btn {
+      padding: 10px 20px; /* Increase padding for better visibility and clickability */
+      font-size: 20px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #3498db;
+      border: none;
+     border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    #spin-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%) rotate(180deg);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 12px;
+      border-color: transparent transparent transparent #fff; /* Adjust color as needed */
+    }
+  .score-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Align to the right */
+      margin-right: 100px; /* Adjust the space between the wheel and scores */
+    }
+
+    .player {
+      padding: 10px;
+      font-size: 16px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      border: 2px solid #333;
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 0px 0px 0px 3px rgb(32, 60, 70),
+                  0px 0px 0px 6px rgb(197, 206, 209),
+                  0px 0px 0px 9px rgb(41, 71, 82);
+      margin-bottom: 20px;
+      margin-right: 50px; /* Adjust the space between Player 1 and Player 2 */
+    }
+
+    #player2 {
+      margin-bottom: 20px; /* Reset margin-bottom for Player 2 */
+    }
+
+    #restart-btn {
+      margin-top: 300px;
+      margin-right: 20px;
+      padding: 5px 15px;
+      font-size: 16px;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #e74c3c; /* Red color */
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+    }
